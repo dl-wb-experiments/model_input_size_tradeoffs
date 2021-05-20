@@ -3,8 +3,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from utils import move, load_model_info, arg_parser
 from constants import model_converter_script
+from utils import move, load_model_info, arg_parser
 
 
 def calculate_shape(source_shape: list, percent: int, input_layout: str) -> tuple:
@@ -22,22 +22,16 @@ def calculate_shape(source_shape: list, percent: int, input_layout: str) -> tupl
 
 def convert_model(model_info: dict, precision: str = 'FP16'):
     model_name = model_info['name']
-    for percent in range(3, 11):
-        percent = percent * 10
-        input_layout = model_info.get('input_layout', 'NCHW')
-        input_resolution = calculate_shape(model_info['input_shape'], percent, input_layout)
-        resolution_sub_folder = '_'.join((str(i) for i in input_resolution))
-
-        result_path = Path('models') / model_name / resolution_sub_folder
-
-        input_shape_argument = f'[{",".join((str(i) for i in input_resolution))}]'
+    for index, input_shape in enumerate(model_info['input_shapes']):
+        result_path = Path('models') / model_name / str(100 - index * 10)
 
         convert_command = [sys.executable, model_converter_script,
-                        '--name', model_info['name'],
-                        '--download_dir', 'models',
-                        '--precision', precision,
-                        '--output_dir', str(result_path),
-                        f'--add_mo_arg=--input_shape={input_shape_argument}']
+                           '--name', model_info['name'],
+                           '--download_dir', 'models',
+                           '--precision', precision,
+                           '--output_dir', str(result_path),
+                           f'--add_mo_arg=--input_shape=[{input_shape}]']
+                           # '--add_mo_arg=--log_level=DEBUG']
 
         print(' '.join((str(i) for i in convert_command)))
 
@@ -51,7 +45,6 @@ def convert_model(model_info: dict, precision: str = 'FP16'):
 def main(arguments):
     models_info = load_model_info(arguments.model)
     for model in models_info:
-        # download_model(model['name'])
         convert_model(model)
 
 

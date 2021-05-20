@@ -1,7 +1,7 @@
 import subprocess
 import sys
 
-from common import load_model_info, arg_parser
+from utils import load_model_info, arg_parser
 from constants import model_downloader_script
 
 
