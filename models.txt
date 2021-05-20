@@ -1,8 +1,0 @@
-efficientnet-b7-pytorch
-yolo-v4-tf
-faster_rcnn_resnet50_coco
-fastseg-large
-ssd512
-yolo-v3-tf
-deeplabv3
-mask_rcnn_inception_resnet_v2_atrous_coco
