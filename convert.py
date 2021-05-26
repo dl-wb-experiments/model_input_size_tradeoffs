@@ -31,7 +31,6 @@ def convert_model(model_info: dict, precision: str = 'FP16'):
                            '--precision', precision,
                            '--output_dir', str(result_path),
                            f'--add_mo_arg=--input_shape=[{input_shape}]']
-                           # '--add_mo_arg=--log_level=DEBUG']
 
         print(' '.join((str(i) for i in convert_command)))
 

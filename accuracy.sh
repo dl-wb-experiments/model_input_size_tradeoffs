@@ -18,7 +18,15 @@ measure_accuracy_for_model () {
     return
   fi
   model_name=$(basename -- $(dirname -- "$model_path"))
-  accuracy_check -c ${configs_folder}/${model_name}.yml -m ${model_path} -s data/ --csv_result ${model_path}/accuracy_result.csv --async_mode 1
+  dir_name=$(basename -- "$model_path")
+
+  rm -rf *.pickle
+
+  accuracy_check -c ${configs_folder}/${model_name}/${dir_name}.yml \
+                   -m ${model_path} \
+                   -s data/ \
+                   --csv_result ${model_path}/accuracy_result.csv \
+                   --async_mode 1
 }
 
 measure_accuracy_for_all_models(){
