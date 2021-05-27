@@ -1,8 +1,8 @@
 models:
     - name: ssd512
       launchers:
-          device: CPU
         - framework: dlsdk
+          device: CPU
           adapter: ssd
           num_requests: 8
 

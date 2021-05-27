@@ -26,7 +26,8 @@ measure_accuracy_for_model () {
                    -m ${model_path} \
                    -s data/ \
                    --csv_result ${model_path}/accuracy_result.csv \
-                   --async_mode 1
+                   --async_mode 1 \
+                   --profile_report_type json
 }
 
 measure_accuracy_for_all_models(){

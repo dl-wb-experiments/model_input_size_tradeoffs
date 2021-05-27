@@ -1,10 +1,10 @@
 models:
     - name: ssd512
       launchers:
-          device: CPU
         - framework: dlsdk
           adapter: ssd
           num_requests: 8
+          device: CPU
 
       datasets:
         - name: VOC2007
