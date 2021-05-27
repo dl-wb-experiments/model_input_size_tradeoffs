@@ -19,15 +19,15 @@ models:
 
     datasets:
       - name: ms_coco_detection_80_class_without_background
-        data_source: coco/val2017/
+        data_source: data/coco/val2017/
         annotation_conversion:
           converter: mscoco_detection
-          annotation_file: coco/val2017/instances_val2017.json
+          annotation_file: data/coco/val2017/instances_val2017.json
           has_background: False
           sort_annotations: True
           use_full_label_map: False
-        annotation: mscoco_det_80.pickle
-        dataset_meta: mscoco_det_80.json
+        annotation: data/coco/mscoco_det_80.pickle
+        dataset_meta: data/coco/mscoco_det_80.json
         preprocessing:
           - type: resize
             size: 416

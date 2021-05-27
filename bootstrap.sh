@@ -22,3 +22,9 @@ pushd ${OPEN_MODEL_ZOO_PATH}/tools/accuracy_checker
   python setup.py install
   python -m pip install pycocotools
 popd
+
+
+pushd ${DEPLOYMENT_TOOLS_PATH}/tools/post_training_optimization_toolkit
+  python setup.py install
+  python -m pip install pycocotools
+popd

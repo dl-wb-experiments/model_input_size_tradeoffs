@@ -36,6 +36,10 @@ measure_accuracy_for_all_models(){
 
   for sub_folder in ${sub_folders}
   do
+    if [ "${sub_folder}" == "quantized" ]; then
+        measure_accuracy_for_all_models ${root_model_path}/${sub_folder}
+        continue
+    fi
     measure_accuracy_for_model ${root_model_path}/${sub_folder}
   done
 

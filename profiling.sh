@@ -15,7 +15,8 @@ profile_model () {
   fi
   model_file_name=$(find ${model_path} -name '*.xml')
 
-  python ${benchmark} -m ${model_file_name} -report_type no_counters --report_folder ${model_path}
+  echo ${model_file_name}
+#  python ${benchmark} -m ${model_file_name} -report_type no_counters --report_folder ${model_path} -t 1
 }
 
 profile_all_models(){
@@ -24,6 +25,10 @@ profile_all_models(){
 
   for sub_folder in ${sub_folders}
   do
+    if [ "${sub_folder}" == "quantized" ]; then
+        profile_all_models ${root_model_path}/${sub_folder}
+        continue
+    fi
     profile_model ${root_model_path}/${sub_folder}
   done
 

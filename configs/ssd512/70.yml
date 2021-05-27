@@ -8,14 +8,14 @@ models:
 
       datasets:
         - name: VOC2007
-          data_source: voc/VOCdevkit/VOC2007/JPEGImages
+          data_source: data/voc/VOCdevkit/VOC2007/JPEGImages
           annotation_conversion:
-            converter: voc_detection
-            annotations_dir: voc/VOCdevkit/VOC2007/Annotations
-            images_dir: voc/VOCdevkit/VOC2007/JPEGImages
-            imageset_file: voc/VOCdevkit/VOC2007/ImageSets/Main/test.txt
-          annotation: voc07.pickle
-          dataset_meta: voc07.json
+            converter: data/voc_detection
+            annotations_dir: data/voc/VOCdevkit/VOC2007/Annotations
+            images_dir: data/voc/VOCdevkit/VOC2007/JPEGImages
+            imageset_file: data/voc/VOCdevkit/VOC2007/ImageSets/Main/test.txt
+          annotation: data/voc/voc07.pickle
+          dataset_meta: data/voc/voc07.json
           preprocessing:
             - type: resize
               size: 358
