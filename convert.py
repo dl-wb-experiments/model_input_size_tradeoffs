@@ -22,8 +22,8 @@ def calculate_shape(source_shape: list, percent: int, input_layout: str) -> tupl
 
 def convert_model(model_info: dict, precision: str = 'FP16'):
     model_name = model_info['name']
-    for index, input_shape in enumerate(model_info['input_shapes']):
-        result_path = Path('models') / model_name / str(100 - index * 10)
+    for index, input_shape in model_info['input_shapes'].items():
+        result_path = Path('models1') / model_name / index
 
         convert_command = [sys.executable, model_converter_script,
                            '--name', model_info['name'],
