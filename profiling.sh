@@ -16,7 +16,7 @@ profile_model () {
   model_file_name=$(find ${model_path} -name '*.xml')
 
   echo ${model_file_name}
-#  python ${benchmark} -m ${model_file_name} -report_type no_counters --report_folder ${model_path} -t 1
+  python ${benchmark} -m ${model_file_name} -report_type no_counters --report_folder ${model_path}
 }
 
 profile_all_models(){
