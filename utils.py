@@ -11,7 +11,7 @@ def arg_parser():
 
 
 def load_model_info(model: str) -> list:
-    with open('models.json') as model_file:
+    with open('configs/models.json') as model_file:
         models_info = json.load(model_file)
     if not model:
         return models_info
