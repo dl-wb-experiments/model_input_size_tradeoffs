@@ -334,25 +334,21 @@ def save_plot_combined(data, int8_data, name, xlim=(80, 100), ylim=(10, 40)):
     figure.show()
     figure.savefig(f'{name}.eps', dpi =800)
 
-ssd_fp32_data = list(filter(lambda item: item['precision'] == 'FP32', data['ssd512']))
-ssd_int8_data = list(filter(lambda item: item['precision'] == 'INT8', data['ssd512']))
-yolo_fp32_data = list(filter(lambda item: item['precision'] == 'FP32', data['yolo_v3']))
-yolo_int8_data = list(filter(lambda item: item['precision'] == 'INT8', data['yolo_v3']))
+if __name__ == '__main__':
 
-ssd_fp32_data_auto = list(filter(lambda item: item['precision'] == 'FP32', data_auto['ssd512']))
-ssd_int8_data_auto = list(filter(lambda item: item['precision'] == 'INT8', data_auto['ssd512']))
-yolo_fp32_data_auto = list(filter(lambda item: item['precision'] == 'FP32', data_auto['yolo_v3']))
-yolo_int8_data_auto = list(filter(lambda item: item['precision'] == 'INT8', data_auto['yolo_v3']))
+    ssd_fp32_data = list(filter(lambda item: item['precision'] == 'FP32', data['ssd512']))
+    ssd_int8_data = list(filter(lambda item: item['precision'] == 'INT8', data['ssd512']))
+    yolo_fp32_data = list(filter(lambda item: item['precision'] == 'FP32', data['yolo_v3']))
+    yolo_int8_data = list(filter(lambda item: item['precision'] == 'INT8', data['yolo_v3']))
 
-# save_plot(ssd_fp32_data, 'SSD512 FP32')
-# save_plot(ssd_int8_data, 'SSD512 INT8', ylim=(30, 70))
-#
-# save_plot(yolo_fp32_data, 'YOLO V3 FP32', ylim=(20,90), xlim=(30, 70))
-# save_plot(yolo_int8_data, 'YOLO V3 INT8', ylim=(55, 220), xlim=(30, 70))
+    ssd_fp32_data_auto = list(filter(lambda item: item['precision'] == 'FP32', data_auto['ssd512']))
+    ssd_int8_data_auto = list(filter(lambda item: item['precision'] == 'INT8', data_auto['ssd512']))
+    yolo_fp32_data_auto = list(filter(lambda item: item['precision'] == 'FP32', data_auto['yolo_v3']))
+    yolo_int8_data_auto = list(filter(lambda item: item['precision'] == 'INT8', data_auto['yolo_v3']))
 
-save_plot_combined(ssd_fp32_data, ssd_int8_data, 'SSD512 FP32 INT8', ylim=(0, 70))
-save_plot_combined(yolo_fp32_data, yolo_int8_data, 'YOLO v3 FP32 INT8', ylim=(0, 270), xlim=(30, 70))
+    save_plot_combined(ssd_fp32_data, ssd_int8_data, 'SSD512 FP32 INT8', ylim=(0, 70))
+    save_plot_combined(yolo_fp32_data, yolo_int8_data, 'YOLO v3 FP32 INT8', ylim=(0, 270), xlim=(30, 70))
 
-save_plot_combined(ssd_fp32_data_auto, ssd_int8_data_auto, 'SSD512 FP32 INT8 auto mode', ylim=(0, 140))
-save_plot_combined(yolo_fp32_data_auto, yolo_int8_data_auto, 'YOLO v3 FP32 INT8 auto mode', ylim=(0, 900),
-                   xlim=(30, 70))
+    save_plot_combined(ssd_fp32_data_auto, ssd_int8_data_auto, 'SSD512 FP32 INT8 auto mode', ylim=(0, 140))
+    save_plot_combined(yolo_fp32_data_auto, yolo_int8_data_auto, 'YOLO v3 FP32 INT8 auto mode', ylim=(0, 900),
+                       xlim=(30, 70))
