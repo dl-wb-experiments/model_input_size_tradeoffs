@@ -1,0 +1,9 @@
+.idea
+.venv
+models/
+__pycache__
+*.pickle
+data/
+mscoco_det_80.json
+voc07.json
+cityscapes.json
