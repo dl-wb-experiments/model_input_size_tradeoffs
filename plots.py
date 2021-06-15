@@ -292,44 +292,47 @@ def create_axes(name: str, x_lim=(80, 100), y_lim=(10, 40)):
     return figure, axes
 
 
-def add_plot_to_axes(axes, data: Dict, line_color: str):
+def add_plot_to_axes(axes, data: Dict, line_color: str, line: str = '-'):
     plots = []
-    shrinks = []
+    shrinks = set()
     accuracy = []
     fps = []
 
     for experiment in data:
         scatter = axes.scatter(experiment['accuracy'] * 100,
-                               experiment['fps'], c='#21befc',
+                               experiment['fps'],
+                               c='#21befc',
                                marker=markers_map[experiment['shrink_percent']],
                                s=80)
-        shrinks.append(f'{experiment["shrink_percent"]}%')
+        shrinks.add(f'{experiment["shrink_percent"]}%')
         fps.append(experiment['fps'])
         accuracy.append(experiment['accuracy'] * 100)
         plots.append(scatter)
-    return axes.plot(accuracy, fps, color=line_color)[0], plots
+
+    line = axes.plot(accuracy, fps, line, color=line_color)[0]
+
+    return line, plots, shrinks
 
 
 def save_plot_combined(data, int8_data, name, xlim=(80, 100), ylim=(10, 40)):
-    shrinks = []
 
     figure, axes = create_axes(name)
 
-    approximated, plots = add_plot_to_axes(axes, data, line_color='#f4cc70')
-    approximated_int8, plots_int8 = add_plot_to_axes(axes, int8_data, line_color='#fd8dbe')
+    line, plots, shrinks = add_plot_to_axes(axes, data, line_color='#f4cc70')
+    line_int8, plots_int8, shrinks_int8 = add_plot_to_axes(axes, int8_data, line='--', line_color='#fd8dbe')
 
     plots.extend(plots_int8)
+    shrinks.update(shrinks_int8)
 
     legend = plt.legend(plots, shrinks)
-    legend2 = plt.legend([approximated, approximated_int8], ['FP32', 'INT8'], loc='upper left')
+    legend2 = plt.legend([line, line_int8], ['FP32', 'INT8'], loc='upper left')
     axes.add_artist(legend)
     axes.add_artist(legend2)
 
     axes.set_xlim(xlim)
     axes.set_ylim(ylim)
     figure.show()
-    # plt.savefig(f'{name}.png', bbox_inches='tight')
-
+    figure.savefig(f'{name}.eps', dpi =800)
 
 ssd_fp32_data = list(filter(lambda item: item['precision'] == 'FP32', data['ssd512']))
 ssd_int8_data = list(filter(lambda item: item['precision'] == 'INT8', data['ssd512']))
@@ -347,9 +350,9 @@ yolo_int8_data_auto = list(filter(lambda item: item['precision'] == 'INT8', data
 # save_plot(yolo_fp32_data, 'YOLO V3 FP32', ylim=(20,90), xlim=(30, 70))
 # save_plot(yolo_int8_data, 'YOLO V3 INT8', ylim=(55, 220), xlim=(30, 70))
 
-# save_plot_combined(ssd_fp32_data, ssd_int8_data, 'SSD512 FP32 INT8', ylim=(0, 70))
-# save_plot_combined(yolo_fp32_data, yolo_int8_data, 'YOLO v3 FP32 INT8', ylim=(0, 270), xlim=(30, 70))
+save_plot_combined(ssd_fp32_data, ssd_int8_data, 'SSD512 FP32 INT8', ylim=(0, 70))
+save_plot_combined(yolo_fp32_data, yolo_int8_data, 'YOLO v3 FP32 INT8', ylim=(0, 270), xlim=(30, 70))
 
-# save_plot_combined(ssd_fp32_data_auto, ssd_int8_data_auto, 'SSD512 FP32 INT8 auto mode', ylim=(0, 140))
+save_plot_combined(ssd_fp32_data_auto, ssd_int8_data_auto, 'SSD512 FP32 INT8 auto mode', ylim=(0, 140))
 save_plot_combined(yolo_fp32_data_auto, yolo_int8_data_auto, 'YOLO v3 FP32 INT8 auto mode', ylim=(0, 900),
                    xlim=(30, 70))
