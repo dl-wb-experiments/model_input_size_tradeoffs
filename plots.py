@@ -1,4 +1,5 @@
 from typing import Dict
+import pandas as pd
 
 import matplotlib.pyplot as plt
 
@@ -335,6 +336,7 @@ def save_plot_combined(data, int8_data, name, xlim=(80, 100), ylim=(10, 40)):
     figure.savefig(f'{name}.eps', dpi =800)
 
 if __name__ == '__main__':
+    df = pd.read_excel('data/data.xlsx')
 
     ssd_fp32_data = list(filter(lambda item: item['precision'] == 'FP32', data['ssd512']))
     ssd_int8_data = list(filter(lambda item: item['precision'] == 'INT8', data['ssd512']))

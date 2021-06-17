@@ -1,21 +1,17 @@
 models:
-  - name: yolo-v3-tf
+  - name: yolo-v2-tf
 
     launchers:
       - framework: dlsdk
         device: CPU
         num_requests: 8
         adapter:
-          type: yolo_v3
-          anchors: "10,13,  16,30,  33,23,  30,61,  62,45,  59,119,  116,90,  156,198,  373,326"
-          num: 9
+          type: yolo_v2
+          anchors: "0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282, 3.52778, 9.77052, 9.16828"
+          num: 5
           coords: 4
           classes: 80
-          anchor_masks: [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
-          outputs:
-            - conv2d_58/Conv2D/YoloRegion
-            - conv2d_66/Conv2D/YoloRegion
-            - conv2d_74/Conv2D/YoloRegion
+          cells: 19
 
     datasets:
       - name: ms_coco_detection_80_class_without_background
