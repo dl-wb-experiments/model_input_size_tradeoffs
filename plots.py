@@ -1,276 +1,8 @@
+from enum import Enum
 from typing import Dict
-import pandas as pd
 
 import matplotlib.pyplot as plt
-
-data = {
-    'ssd512': [
-        {
-            'precision': 'FP32',
-            'image_size': 307,
-            'shrink_percent': 60,
-            'accuracy': 0.860219279,
-            'fps': 31.05,
-            'latency': 32.06
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 358,
-            'shrink_percent': 70,
-            'accuracy': 0.8849146,
-            'fps': 24,
-            'latency': 41.42
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 409,
-            'shrink_percent': 80,
-            'accuracy': 0.900116568,
-            'fps': 18.99,
-            'latency': 52.44
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 460,
-            'shrink_percent': 90,
-            'accuracy': 0.925786965,
-            'fps': 15.29,
-            'latency': 65.12
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 512,
-            'shrink_percent': 100,
-            'accuracy': 0.935635092,
-            'fps': 12.82,
-            'latency': 77.47
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 307,
-            'shrink_percent': 60,
-            'accuracy': 0.860887752,
-            'fps': 63.99,
-            'latency': 14.64
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 358,
-            'shrink_percent': 70,
-            'accuracy': 0.884815653,
-            'fps': 61.29,
-            'latency': 15.8
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 409,
-            'shrink_percent': 80,
-            'accuracy': 0.900743537,
-            'fps': 42.56,
-            'latency': 22.61
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 460,
-            'shrink_percent': 90,
-            'accuracy': 0.924497067,
-            'fps': 37.71,
-            'latency': 25.91
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 512,
-            'shrink_percent': 100,
-            'accuracy': 0.936863839,
-            'fps': 36.19,
-            'latency': 26.05
-        },
-    ],
-    'yolo_v3': [
-        {
-            'precision': 'FP32',
-            'image_size': 130,
-            'shrink_percent': 40,
-            'accuracy': 0.321967471,
-            'fps': 87.41,
-            'latency': 11.33
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 290,
-            'shrink_percent': 70,
-            'accuracy': 0.546742586,
-            'fps': 38.66,
-            'latency': 25.71
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 416,
-            'shrink_percent': 100,
-            'accuracy': 0.622759,
-            'fps': 24.55,
-            'latency': 40.53
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 130,
-            'shrink_percent': 40,
-            'accuracy': 0.31829058,
-            'fps': 215.05,
-            'latency': 4.57
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 290,
-            'shrink_percent': 70,
-            'accuracy': 0.547299563,
-            'fps': 94.94,
-            'latency': 10.47
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 416,
-            'shrink_percent': 100,
-            'accuracy': 0.622583988,
-            'fps': 59.62,
-            'latency': 16.75
-        }
-    ]
-}
-data_auto = {
-    'ssd512': [
-        {
-            'precision': 'FP32',
-            'image_size': 307,
-            'shrink_percent': 60,
-            'accuracy': 0.860219279,
-            'fps': 41.49,
-            'latency': 144.17
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 358,
-            'shrink_percent': 70,
-            'accuracy': 0.8849146,
-            'fps': 31.24,
-            'latency': 190.95
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 409,
-            'shrink_percent': 80,
-            'accuracy': 0.900116568,
-            'fps': 24.54,
-            'latency': 243.37
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 460,
-            'shrink_percent': 90,
-            'accuracy': 0.925786965,
-            'fps': 19.19,
-            'latency': 309.49
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 512,
-            'shrink_percent': 100,
-            'accuracy': 0.935635092,
-            'fps': 15.65,
-            'latency': 380.3
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 307,
-            'shrink_percent': 60,
-            'accuracy': 0.860887752,
-            'fps': 133.87,
-            'latency': 44.06
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 358,
-            'shrink_percent': 70,
-            'accuracy': 0.884815653,
-            'fps': 97.67,
-            'latency': 60.79
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 409,
-            'shrink_percent': 80,
-            'accuracy': 0.900743537,
-            'fps': 77.23,
-            'latency': 76.78
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 460,
-            'shrink_percent': 90,
-            'accuracy': 0.924497067,
-            'fps': 60.08,
-            'latency': 97.69
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 512,
-            'shrink_percent': 100,
-            'accuracy': 0.936863839,
-            'fps': 50.4,
-            'latency': 117.61
-        },
-    ],
-    'yolo_v3': [
-        {
-            'precision': 'FP32',
-            'image_size': 130,
-            'shrink_percent': 40,
-            'accuracy': 0.321967471,
-            'fps': 198.64,
-            'latency': 29.99
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 290,
-            'shrink_percent': 70,
-            'accuracy': 0.546742586,
-            'fps': 68.51,
-            'latency': 88.35
-        },
-        {
-            'precision': 'FP32',
-            'image_size': 416,
-            'shrink_percent': 100,
-            'accuracy': 0.622759,
-            'fps': 37.69,
-            'latency': 158.88
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 130,
-            'shrink_percent': 40,
-            'accuracy': 0.31829058,
-            'fps': 718.57,
-            'latency': 8.27
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 290,
-            'shrink_percent': 70,
-            'accuracy': 0.547299563,
-            'fps': 226.38,
-            'latency': 26.44
-        },
-        {
-            'precision': 'INT8',
-            'image_size': 416,
-            'shrink_percent': 100,
-            'accuracy': 0.622583988,
-            'fps': 118.67,
-            'latency': 50.38
-        }
-    ]
-}
+import pandas as pd
 
 markers_map = {
     40: 's',
@@ -282,75 +14,154 @@ markers_map = {
 }
 
 
-def create_axes(name: str, x_lim=(80, 100), y_lim=(10, 40)):
+def create_axes(name: str):
     figure, axes = plt.subplots()
     figure.suptitle(name)
     axes.grid(True)
     axes.set_xlabel('Accuracy, %')
-    axes.set_xlim(x_lim)
     axes.set_ylabel('Throughput (FPS)')
-    axes.set_ylim(y_lim)
     return figure, axes
 
 
 def add_plot_to_axes(axes, data: Dict, line_color: str, line: str = '-'):
     plots = []
-    shrinks = set()
+    shrinks = []
     accuracy = []
     fps = []
 
-    for experiment in data:
-        scatter = axes.scatter(experiment['accuracy'] * 100,
-                               experiment['fps'],
+    for percent, experiment in data.items():
+        accuracy_ = experiment['Accuracy'] * 100
+        fps_ = experiment['FPS']
+        scatter = axes.scatter(accuracy_,
+                               fps_,
                                c='#21befc',
-                               marker=markers_map[experiment['shrink_percent']],
+                               marker=markers_map[percent],
                                s=80)
-        shrinks.add(f'{experiment["shrink_percent"]}%')
-        fps.append(experiment['fps'])
-        accuracy.append(experiment['accuracy'] * 100)
+        shrinks.append(f'{percent}%')
+        fps.append(fps_)
+        accuracy.append(accuracy_)
         plots.append(scatter)
 
     line = axes.plot(accuracy, fps, line, color=line_color)[0]
-
+    max_fps = max(fps)
+    axes.set_ylim((0, max_fps + max_fps / 100 * 30))
     return line, plots, shrinks
 
 
-def save_plot_combined(data, int8_data, name, xlim=(80, 100), ylim=(10, 40)):
-
+def save_plot_combined(data, int8_data, name):
     figure, axes = create_axes(name)
 
     line, plots, shrinks = add_plot_to_axes(axes, data, line_color='#f4cc70')
-    line_int8, plots_int8, shrinks_int8 = add_plot_to_axes(axes, int8_data, line='--', line_color='#fd8dbe')
+    if int8_data:
+        line_int8, plots_int8, shrinks_int8 = add_plot_to_axes(axes, int8_data, line='--', line_color='#fd8dbe')
 
-    plots.extend(plots_int8)
-    shrinks.update(shrinks_int8)
+        plots.extend(plots_int8)
+        legend2 = plt.legend([line, line_int8], ['FP32', 'INT8'], loc='upper left')
+
+    else:
+        legend2 = plt.legend([line], ['FP32'], loc='upper left')
 
     legend = plt.legend(plots, shrinks)
-    legend2 = plt.legend([line, line_int8], ['FP32', 'INT8'], loc='upper left')
+
     axes.add_artist(legend)
     axes.add_artist(legend2)
 
-    axes.set_xlim(xlim)
-    axes.set_ylim(ylim)
     figure.show()
-    figure.savefig(f'{name}.eps', dpi =800)
+    figure.savefig(f'{name}.eps', dpi=800)
+
+
+def get_fractions_indexes(data_frame) -> Dict[int, Dict[str, int]]:
+    previous_fraction = None
+    fractions = {}
+    for index, fraction in enumerate(data_frame):
+        if 'Unnamed' in str(fraction):
+            continue
+        if fraction != previous_fraction:
+            fractions[fraction] = index
+
+    result_fractions = {}
+    for fraction, start_index in fractions.items():
+        percent = int(fraction * 100)
+        result_fractions[percent] = {}
+        headers = ('Image size', 'Accuracy', 'FPS', 'Latency', 'Batch', 'Stream')
+        for index, head in enumerate(headers):
+            result_fractions[percent][head] = index + start_index
+    return result_fractions
+
+
+def parse_data_from_sheet(data_frame) -> dict:
+    fractions = get_fractions_indexes(data_frame)
+    raws = data_frame.iterrows()
+    next(raws)
+    models = {}
+    for _, data in raws:
+        model_data = list(data)
+        model_name = model_data[0]
+        device = model_data[1]
+        precision = model_data[2]
+        for fraction, headers in fractions.items():
+            if model_name not in models:
+                models[model_name] = {}
+            if device not in models[model_name]:
+                models[model_name][device] = {}
+            if precision not in models[model_name][device]:
+                models[model_name][device][precision] = {}
+            processed_model_data = models[model_name][device][precision]
+
+            for header, index in headers.items():
+                if not pd.notnull(model_data[index]):
+                    continue
+                if fraction not in processed_model_data:
+                    processed_model_data[fraction] = {}
+                processed_model_data[fraction][header] = model_data[index]
+    return models
+
+
+def read_data_from_excel(file_path: str) -> dict:
+    data_frame_1 = pd.read_excel(file_path, sheet_name='1-1')
+    data_1_1 = parse_data_from_sheet(data_frame_1)
+    data_frame_auto = pd.read_excel(file_path, sheet_name='auto')
+    data_auto = parse_data_from_sheet(data_frame_auto)
+    return {
+        '1_1': data_1_1,
+        'auto': data_auto,
+    }
+
+
+class Devices(Enum):
+    xeon = 'XEON CPU'
+    tgl_multi = 'TGL MULTI'
+    tgl_myriad = 'TGL MYRIAD'
+
+
+class Models(Enum):
+    ssd = 'ssd512'
+    yolo_v2 = 'Yolo V2 TF'
+    yolo_v3 = 'Yolo V3 TF'
+
+
+class Precision(Enum):
+    fp = 'FP32'
+    int = 'INT8'
+
+
+DEVICE_FOR_HEADER = {
+    Devices.tgl_myriad: 'MYRIAD',
+    Devices.tgl_multi: 'Multi',
+    Devices.xeon: 'Xeon Gold CPU'
+}
 
 if __name__ == '__main__':
-    df = pd.read_excel('data/data.xlsx')
+    models_data = read_data_from_excel('data/table.xlsx')
 
-    ssd_fp32_data = list(filter(lambda item: item['precision'] == 'FP32', data['ssd512']))
-    ssd_int8_data = list(filter(lambda item: item['precision'] == 'INT8', data['ssd512']))
-    yolo_fp32_data = list(filter(lambda item: item['precision'] == 'FP32', data['yolo_v3']))
-    yolo_int8_data = list(filter(lambda item: item['precision'] == 'INT8', data['yolo_v3']))
-
-    ssd_fp32_data_auto = list(filter(lambda item: item['precision'] == 'FP32', data_auto['ssd512']))
-    ssd_int8_data_auto = list(filter(lambda item: item['precision'] == 'INT8', data_auto['ssd512']))
-    yolo_fp32_data_auto = list(filter(lambda item: item['precision'] == 'FP32', data_auto['yolo_v3']))
-    yolo_int8_data_auto = list(filter(lambda item: item['precision'] == 'INT8', data_auto['yolo_v3']))
-
-    save_plot_combined(ssd_fp32_data, ssd_int8_data, 'SSD512 FP32 INT8', ylim=(0, 70))
-    save_plot_combined(yolo_fp32_data, yolo_int8_data, 'YOLO v3 FP32 INT8', ylim=(0, 270), xlim=(30, 70))
-
-    save_plot_combined(ssd_fp32_data_auto, ssd_int8_data_auto, 'SSD512 FP32 INT8 auto mode', ylim=(0, 140))
-    save_plot_combined(yolo_fp32_data_auto, yolo_int8_data_auto, 'YOLO v3 FP32 INT8 auto mode', ylim=(0, 900),
-                       xlim=(30, 70))
+    for data in models_data.values():
+        for model in Models:
+            model_data = data[model.value]
+            for device in Devices:
+                model_device_data = model_data[device.value]
+                fp_data = model_device_data[Precision.fp.value]
+                int_data = None
+                if device != Devices.tgl_myriad:
+                    int_data = model_device_data[Precision.int.value]
+                save_plot_combined(fp_data, int_data,
+                                   f'{DEVICE_FOR_HEADER[device]}-device-execution {model.value} stream {fp_data[100]["Stream"]} batch {fp_data[100]["Batch"]} ')
