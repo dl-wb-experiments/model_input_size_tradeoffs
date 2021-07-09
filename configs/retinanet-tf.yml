@@ -1,0 +1,37 @@
+models:
+  - name: retinanet-tf
+    launchers:
+      - framework: dlsdk
+        device: CPU
+        num_requests: 8
+        adapter: ssd
+
+    datasets:
+      - name: ms_coco_detection_80_class_without_background
+        data_source: coco/val2017/
+        annotation_conversion:
+          converter: mscoco_detection
+          annotation_file: coco/val2017/instances_val2017.json
+          has_background: False
+          sort_annotations: True
+          use_full_label_map: False
+        annotation: coco/mscoco_det_80.pickle
+        dataset_meta: coco/mscoco_det_80.json
+        preprocessing:
+          - type: resize
+            aspect_ratio_scale: frcnn_keep_aspect_ratio
+            size: 1333
+          - type: padding
+            size: 1333
+            pad_type: right_bottom
+
+        postprocessing:
+          - type: faster_rcnn_postprocessing_resize
+            size: 1333
+          - type: filter
+            apply_to: prediction
+            min_confidence: 0.05
+            remove_filtered: True
+
+        metrics:
+          - type: coco_precision

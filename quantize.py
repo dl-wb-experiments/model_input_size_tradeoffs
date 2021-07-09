@@ -1,11 +1,11 @@
-import copy
 import shutil
 import subprocess
 from pathlib import Path
 
 import yaml
 
-from constants import configs, models_path, pot, data_path
+from common import get_accuracy_config, set_shape_to_config, set_cells_to_config, set_path_to_data
+from constants import models_path, pot
 from utils import load_model_info, arg_parser
 
 
@@ -20,7 +20,8 @@ def run_pot(model_path: Path):
                         '--preset', 'performance',
                         '-q', 'default',
                         '--output-dir', f'{models_path}/{model_name}/quantized/{dir_name}',
-                        '--direct-dump'
+                        '--direct-dump',
+                        '--evaluate',
                         ]
 
     print(' '.join((str(i) for i in accuracy_command)))
@@ -41,42 +42,10 @@ def move_quantized_model(quantized_folder_path, optimized_folder_path, model_nam
     shutil.rmtree(str(optimized_folder_path))
 
 
-def get_config(model_name) -> dict:
-    config_path = configs / f'{model_name}.yml'
-    with config_path.open() as config_file:
-        return yaml.safe_load(config_file)
-
-
-def set_shape_to_config(config: dict, input_shape: list) -> dict:
-    new_config = copy.deepcopy(config)
-    preprocessings = new_config['models'][0]['datasets'][0]['preprocessing']
-    for preprocessing in preprocessings:
-        if preprocessing['type'] == 'resize':
-            preprocessing['size'] = int(input_shape[2])
-    return new_config
-
-
-def set_path_to_data(config: dict):
-    new_config = copy.deepcopy(config)
-    dataset = new_config['models'][0]['datasets'][0]
-    dataset['data_source'] = str(data_path / dataset['data_source'])
-    dataset['dataset_meta'] = str(data_path / dataset['dataset_meta'])
-    dataset['annotation'] = str(data_path / dataset['annotation'])
-    annotation_conversion = dataset['annotation_conversion']
-    if 'annotation_file' in annotation_conversion:
-        annotation_conversion['annotation_file'] = str(data_path / annotation_conversion['annotation_file'])
-    if 'annotations_dir' in annotation_conversion:
-        annotation_conversion['annotations_dir'] = str(data_path / annotation_conversion['annotations_dir'])
-    if 'images_dir' in annotation_conversion:
-        annotation_conversion['images_dir'] = str(data_path / annotation_conversion['images_dir'])
-    if 'imageset_file' in annotation_conversion:
-        annotation_conversion['imageset_file'] = str(data_path / annotation_conversion['imageset_file'])
-    return new_config
-
-
-def create_config(model_name: str, input_shape: list) -> dict:
-    source_config = get_config(model_name)
+def create_config(model_name: str, input_shape: list, xml_path) -> dict:
+    source_config = get_accuracy_config(model_name)
     new_config = set_shape_to_config(source_config, input_shape)
+    new_config = set_cells_to_config(new_config, xml_path)
     return set_path_to_data(new_config)
 
 
@@ -86,10 +55,11 @@ def quantize_models(models_path: Path, model_info: dict):
     for percent, shape in input_shapes.items():
 
         model_path = models_path / percent
-        if not list(model_path.glob('*.xml')) or not list(model_path.glob('*.bin')):
+        xml_path = next(model_path.glob('*.xml'))
+        if not xml_path or not list(model_path.glob('*.bin')):
             continue
 
-        new_config = create_config(model_name, shape.split(','))
+        new_config = create_config(model_name, shape.split(','), xml_path)
         config_path = model_path / 'accuracy_checker_config.yml'
         with config_path.open('w') as config_file:
             yaml.dump(new_config, config_file)
